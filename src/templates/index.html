@@ -1,300 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AQI Monitor</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <title>AQI Forecast Dashboard</title>
 
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #0f1117;
-    color: #e0e0e0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-  }
-
-  h1 {
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #aaa;
-    margin-bottom: 2rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  /* ── AQI dial ── */
-  .dial-wrap {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    margin-bottom: 1.5rem;
-  }
-  .dial-wrap svg { width: 100%; height: 100%; }
-  .dial-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-  }
-  .aqi-number {
-    font-size: 3.2rem;
-    font-weight: 700;
-    line-height: 1;
-    transition: color 0.6s;
-  }
-  .aqi-label {
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: 4px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  /* ── category badge ── */
-  .badge {
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 6px 18px;
-    border-radius: 999px;
-    margin-bottom: 0.5rem;
-    transition: background 0.6s, color 0.6s;
-  }
-
-  /* ── location line ── */
-  .location {
-    font-size: 0.82rem;
-    color: #666;
-    margin-bottom: 2rem;
-  }
-
-  /* ── pollutant cards ── */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    width: 100%;
-    max-width: 480px;
-    margin-bottom: 2rem;
-  }
-  .card {
-    background: #1a1d26;
-    border: 1px solid #2a2d3a;
-    border-radius: 12px;
-    padding: 14px 10px;
-    text-align: center;
-  }
-  .card-name {
-    font-size: 0.72rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
-  }
-  .card-val {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #e0e0e0;
-  }
-  .card-unit {
-    font-size: 0.65rem;
-    color: #555;
-    margin-top: 2px;
-  }
-
-  /* ── comparison row ── */
-  .compare {
-    display: flex;
-    gap: 20px;
-    font-size: 0.82rem;
-    color: #555;
-    margin-bottom: 2rem;
-  }
-  .compare span { color: #888; }
-  .compare strong { color: #ccc; }
-
-  /* ── refresh button ── */
-  button {
-    background: #1e2130;
-    color: #aaa;
-    border: 1px solid #2e3248;
-    border-radius: 8px;
-    padding: 10px 28px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-  }
-  button:hover { background: #262a3e; color: #e0e0e0; }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* ── timestamp ── */
-  .ts {
-    font-size: 0.72rem;
-    color: #444;
-    margin-top: 1rem;
-  }
-
-  /* ── loading / error states ── */
-  #status-msg {
-    font-size: 0.82rem;
-    color: #666;
-    min-height: 20px;
-    margin-top: 0.5rem;
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid #333;
-    border-top-color: #888;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
-<h1>AQI Monitor</h1>
+<div class="container">
 
-<!-- Dial -->
-<div class="dial-wrap">
-  <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-    <!-- background arc -->
-    <path id="arc-bg"
-      d="M 30 165 A 90 90 0 1 1 190 165"
-      fill="none" stroke="#1e2130" stroke-width="16" stroke-linecap="round"/>
-    <!-- foreground arc (animated) -->
-    <path id="arc-fg"
-      d="M 30 165 A 90 90 0 1 1 190 165"
-      fill="none" stroke="#444" stroke-width="16" stroke-linecap="round"
-      stroke-dasharray="283" stroke-dashoffset="283"
-      style="transition: stroke-dashoffset 1s ease, stroke 0.6s ease;"/>
-  </svg>
-  <div class="dial-center">
-    <div class="aqi-number" id="aqi-num">—</div>
-    <div class="aqi-label">AQI</div>
-  </div>
+    <h1>AQI FORECAST</h1>
+
+    <!-- Forecast Cards -->
+    <div class="forecast">
+
+        <div class="forecast-card">
+            <h3>Now</h3>
+            <div id="aqi_now">--</div>
+        </div>
+
+        <div class="forecast-card">
+            <h3>8 Hours</h3>
+            <div id="aqi_8h">--</div>
+        </div>
+
+        <div class="forecast-card">
+            <h3>24 Hours</h3>
+            <div id="aqi_24h">--</div>
+        </div>
+
+        <div class="forecast-card">
+            <h3>7 Days</h3>
+            <div id="aqi_7d">--</div>
+        </div>
+
+    </div>
+
+    <!-- AQI Category -->
+    <div class="badge" id="category">--</div>
+
+    <!-- Location -->
+    <div class="location" id="location">Detecting location...</div>
+
+    <!-- Pollutants -->
+    <div class="cards">
+
+        <div class="card">
+            <b>PM2.5</b>
+            <span id="pm25">--</span>
+        </div>
+
+        <div class="card">
+            <b>PM10</b>
+            <span id="pm10">--</span>
+        </div>
+
+        <div class="card">
+            <b>NO2</b>
+            <span id="no2">--</span>
+        </div>
+
+        <div class="card">
+            <b>CO</b>
+            <span id="co">--</span>
+        </div>
+
+        <div class="card">
+            <b>SO2</b>
+            <span id="so2">--</span>
+        </div>
+
+    </div>
+
+    <!-- Advice -->
+    <div id="advice">Loading advice...</div>
+
+    <!-- Button -->
+    <button onclick="fetchAQI()">Refresh</button>
+
 </div>
 
-<div class="badge" id="badge">Fetching…</div>
-<div class="location" id="loc">Detecting location…</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-<!-- Pollutant cards -->
-<div class="cards" id="cards" style="display:none">
-  <div class="card"><div class="card-name">PM2.5</div><div class="card-val" id="v-pm25">—</div><div class="card-unit">µg/m³</div></div>
-  <div class="card"><div class="card-name">PM10</div><div class="card-val" id="v-pm10">—</div><div class="card-unit">µg/m³</div></div>
-  <div class="card"><div class="card-name">NO₂</div><div class="card-val" id="v-no2">—</div><div class="card-unit">µg/m³</div></div>
-  <div class="card"><div class="card-name">CO</div><div class="card-val" id="v-co">—</div><div class="card-unit">mg/m³</div></div>
-  <div class="card"><div class="card-name">SO₂</div><div class="card-val" id="v-so2">—</div><div class="card-unit">µg/m³</div></div>
-</div>
-
-<!-- Model vs reported comparison -->
-<div class="compare" id="compare" style="display:none">
-  <div>Model prediction: <strong id="c-pred">—</strong></div>
-  <div>Station reported: <strong id="c-rep">—</strong></div>
-</div>
-
-<button id="btn" onclick="loadData()">Refresh</button>
-<div id="status-msg"></div>
-<div class="ts" id="ts"></div>
-
-<script>
-// AQI arc: total arc length ≈ 283 (semicircle r=90 * π ≈ 283)
-const ARC_LEN = 283;
-
-const COLORS = {
-  "Good":        "#00e400",
-  "Satisfactory":"#a8e05f",
-  "Moderate":    "#ff7e00",
-  "Poor":        "#ff0000",
-  "Very Poor":   "#8f3f97",
-  "Severe":      "#7e0023",
-};
-
-function setStatus(msg, loading=false) {
-  const el = document.getElementById("status-msg");
-  el.innerHTML = loading ? `<span class="spinner"></span>${msg}` : msg;
-}
-
-function updateDial(aqi, category) {
-  const pct    = Math.min(aqi / 500, 1);
-  const offset = ARC_LEN - pct * ARC_LEN;
-  const color  = COLORS[category] || "#888";
-  const arc    = document.getElementById("arc-fg");
-  arc.style.strokeDashoffset = offset;
-  arc.style.stroke           = color;
-
-  const num = document.getElementById("aqi-num");
-  num.textContent  = aqi;
-  num.style.color  = color;
-
-  const badge = document.getElementById("badge");
-  badge.textContent   = category;
-  badge.style.background = color + "22";
-  badge.style.color      = color;
-}
-
-async function loadData() {
-  const btn = document.getElementById("btn");
-  btn.disabled = true;
-  setStatus("Detecting location & fetching air quality data…", true);
-
-  // Try to get precise browser geolocation first
-  let url = "/predict";
-  try {
-    const pos = await new Promise((res, rej) =>
-      navigator.geolocation.getCurrentPosition(res, rej, {timeout: 5000}));
-    url = `/predict?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`;
-  } catch (_) {
-    // fallback to IP-based geolocation (server side)
-  }
-
-  try {
-    const resp = await fetch(url);
-    const d    = await resp.json();
-
-    if (d.status !== "ok") throw new Error(d.message);
-
-    updateDial(d.predicted_aqi, d.category);
-
-    document.getElementById("loc").textContent =
-      `${d.station || d.city}${d.country ? ", " + d.country : ""} · ${d.lat?.toFixed(3)}°, ${d.lon?.toFixed(3)}°`;
-
-    const p = d.pollutants;
-    document.getElementById("v-pm25").textContent = p["PM2.5"] ?? "—";
-    document.getElementById("v-pm10").textContent = p["PM10"]  ?? "—";
-    document.getElementById("v-no2").textContent  = p["NO2"]   ?? "—";
-    document.getElementById("v-co").textContent   = p["CO"]    ?? "—";
-    document.getElementById("v-so2").textContent  = p["SO2"]   ?? "—";
-
-    document.getElementById("c-pred").textContent = d.predicted_aqi;
-    document.getElementById("c-rep").textContent  = d.reported_aqi ?? "N/A";
-
-    document.getElementById("cards").style.display   = "grid";
-    document.getElementById("compare").style.display = "flex";
-    document.getElementById("ts").textContent = "Data timestamp: " + (d.timestamp || "N/A");
-
-    setStatus("");
-  } catch (err) {
-    setStatus("Error: " + err.message);
-    document.getElementById("badge").textContent = "Error";
-  }
-
-  btn.disabled = false;
-}
-
-// Auto-load on page open
-loadData();
-</script>
 </body>
 </html>
