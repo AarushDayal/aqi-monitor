@@ -56,16 +56,16 @@ function fetchAQI() {
 
             const loc = document.getElementById("location");
             if (loc) {
-                loc.innerText = `${data.station}, ${data.city}`;
+                loc.innerText = data.location;
             }
 
             const pollutants = data.pollutants || {};
 
-            safeSet("pm25", pollutants["PM2.5"]);
-            safeSet("pm10", pollutants["PM10"]);
-            safeSet("no2", pollutants["NO2"]);
-            safeSet("co", pollutants["CO"]);
-            safeSet("so2", pollutants["SO2"]);
+            safeSet("pm25", pollutants["pm25"]);
+            safeSet("pm10", pollutants["pm10"]);
+            safeSet("no2", pollutants["no2"]);
+            safeSet("co", pollutants["co"]);
+            safeSet("so2", pollutants["so2"]);
 
             const advice = document.getElementById("advice");
             if (advice) {
