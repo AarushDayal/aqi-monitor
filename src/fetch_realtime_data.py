@@ -91,7 +91,7 @@ def parse_waqi_to_features(waqi_data):
 
 
 def get_aqi_category(aqi):
-    """Return AQI category label and color."""
+    """eturn AQI category label and color."""
     if aqi <= 50:
         return "Good", "#00e400"
     if aqi <= 100:
@@ -164,3 +164,34 @@ def fetch_and_prepare(lat=None, lon=None):
     print("ACTUAL:  ", features_df.columns.tolist())
 
     return features_df, raw, location
+
+
+def get_realtime_data():
+    """
+    Wrapper to match app.py expectations
+    """
+
+    features_df, raw, location = fetch_and_prepare()
+
+    # Convert DataFrame → dict (VERY IMPORTANT)
+    features_dict = features_df.iloc[0].to_dict()
+
+    # Extract pollutants (for frontend)
+    iaqi = raw.get("iaqi", {})
+
+    def get_val(key):
+        return iaqi.get(key, {}).get("v", 0)
+
+    pollutants = {
+        "pm25": get_val("pm25"),
+        "pm10": get_val("pm10"),
+        "no2": get_val("no2"),
+        "so2": get_val("so2"),
+        "co": get_val("co"),
+    }
+
+    return {
+        "features": features_dict,
+        "pollutants": pollutants,
+        "location": location.get("station", location.get("city", "Unknown")),
+    }
