@@ -85,6 +85,11 @@ def parse_waqi_to_features(waqi_data):
         + get_val("no2")
         + get_val("co"),
         "NO_proxy": get_val("no2"),  # NOx - NO2 proxy
+        
+        # MOCK LAGGED FEATURES: Assume recent stability
+        "AQI_lag1": waqi_data.get("aqi", 0),
+        "AQI_lag2": waqi_data.get("aqi", 0),
+        "AQI_lag24": waqi_data.get("aqi", 0),
     }
 
     return pd.DataFrame([row])
@@ -137,6 +142,9 @@ def fetch_and_prepare(lat=None, lon=None):
         "CO",
         "SO2",
         "Toluene",
+        "AQI_lag1",
+        "AQI_lag2",
+        "AQI_lag24",
         "hour",
         "month",
         "day",

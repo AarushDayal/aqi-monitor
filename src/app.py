@@ -18,9 +18,13 @@ except:
 
 app = Flask(__name__)
 
-# 🔹 Load ML model
+# 🔹 Load ML models
 model = joblib.load("../models/saved/stacking_ensemble.pkl")
-
+try:
+    multi_model = joblib.load("../models/saved/multi_horizon_model.pkl")
+except Exception as e:
+    print("Warning: could not load multi_horizon_model.pkl", e)
+    multi_model = None
 
 # 🔹 Predict current AQI
 def predict_current_aqi(features_dict):
@@ -59,7 +63,7 @@ def predict():
         pollutants = data["pollutants"]
         location = data["location"]
 
-        base_aqi = float(np.expm1(predict_current_aqi(features)))
+        base_aqi = predict_current_aqi(features)
         base_aqi = float(np.clip(base_aqi, 0, 500))
 
         if LOGGING_ENABLED:
@@ -68,7 +72,10 @@ def predict():
             except Exception as e:
                 print("Logging failed:", e)
 
-        future_preds = forecast_aqi(model=model, base_features=features, steps=3)
+        if multi_model is not None:
+            future_preds = forecast_aqi(model=multi_model, base_features=features)
+        else:
+            future_preds = [base_aqi]*3 # fallback
 
         aqi_8h = future_preds[0]
         aqi_24h = future_preds[1]
@@ -95,4 +102,4 @@ def predict():
 
 # 🔹 Run App
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8080, host="0.0.0.0")

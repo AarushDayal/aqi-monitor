@@ -49,9 +49,9 @@ test_df = pd.read_csv(TEST_PATH)
 train_df = engineer_features(train_df)
 test_df = engineer_features(test_df)
 
-X_train = train_df.drop("AQI", axis=1)
+X_train = train_df.drop(["AQI", "AQI_8h", "AQI_24h", "AQI_168h"], axis=1, errors="ignore")
 y_train = train_df["AQI"]
-X_test = test_df.drop("AQI", axis=1)
+X_test = test_df.drop(["AQI", "AQI_8h", "AQI_24h", "AQI_168h"], axis=1, errors="ignore")
 y_test = test_df["AQI"]
 
 print(f"Train shape: {X_train.shape}")

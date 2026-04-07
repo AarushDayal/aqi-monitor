@@ -33,10 +33,34 @@ function safeSet(id, value) {
 function fetchAQI() {
     console.log("Fetching AQI..."); // DEBUG
 
+    const loader = document.getElementById("loader");
+    const forecastGrid = document.getElementById("forecast-grid");
+    const pollutantsGrid = document.getElementById("pollutants-grid");
+    const advice = document.getElementById("advice");
+    const refreshBtn = document.getElementById("refresh-btn");
+
+    if(loader) loader.style.display = "block";
+    if(forecastGrid) forecastGrid.style.display = "none";
+    if(pollutantsGrid) pollutantsGrid.style.display = "none";
+    if(advice) advice.style.display = "none";
+    if(refreshBtn) {
+        refreshBtn.innerText = "Analyzing variables...";
+        refreshBtn.disabled = true;
+    }
+
     fetch("/predict")
         .then(res => res.json())
         .then(data => {
             console.log("DATA:", data); // DEBUG
+
+            if(loader) loader.style.display = "none";
+            if(forecastGrid) forecastGrid.style.display = "grid";
+            if(pollutantsGrid) pollutantsGrid.style.display = "grid";
+            if(advice) advice.style.display = "block";
+            if(refreshBtn) {
+                refreshBtn.innerText = "Fetch ML Forecast";
+                refreshBtn.disabled = false;
+            }
 
             if (data.status === "error") {
                 alert(data.message);
@@ -67,9 +91,9 @@ function fetchAQI() {
             safeSet("co", pollutants["co"]);
             safeSet("so2", pollutants["so2"]);
 
-            const advice = document.getElementById("advice");
-            if (advice) {
-                advice.innerText = getAdvice(data.aqi_now);
+            const adviceEl = document.getElementById("advice");
+            if (adviceEl) {
+                adviceEl.innerText = getAdvice(data.aqi_now);
             }
         })
         .catch(err => {

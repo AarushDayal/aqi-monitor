@@ -24,7 +24,37 @@ print(f"After capping AQI at 500: {df.shape}")
 # ─────────────────────────────────────────
 # Parse datetime + extract temporal features
 # ─────────────────────────────────────────
-df["Datetime"] = pd.to_datetime(df["Datetime"])
+df["Datetime"] = pd.to_datetime(df["Datetime"], errors="coerce")
+df = df.dropna(subset=["Datetime"]).sort_values(by=["StationId", "Datetime"])
+
+# Create future targets safely using time-shifting merge
+print("Engineering future AQI targets...")
+df_target = df[["StationId", "Datetime", "AQI"]].copy()
+
+# --- NEW: Create lagged features ---
+print("Engineering lagged AQI features...")
+for hours, label in zip([1, 2, 24], ["AQI_lag1", "AQI_lag2", "AQI_lag24"]):
+    df_temp = df_target.copy()
+    df_temp["Datetime"] = df_temp["Datetime"] + pd.Timedelta(hours=hours)
+    df_temp = df_temp.rename(columns={"AQI": label})
+    df_temp = df_temp.drop_duplicates(subset=["StationId", "Datetime"])
+    df = pd.merge(df, df_temp, on=["StationId", "Datetime"], how="left")
+
+# Drop rows missing past targets so we have clean features
+df = df.dropna(subset=["AQI_lag1", "AQI_lag2", "AQI_lag24"])
+print(f"After dropping missing lag features: {df.shape}")
+
+for hours, label in zip([8, 24, 168], ["AQI_8h", "AQI_24h", "AQI_168h"]):
+    df_temp = df_target.copy()
+    df_temp["Datetime"] = df_temp["Datetime"] - pd.Timedelta(hours=hours)
+    df_temp = df_temp.rename(columns={"AQI": label})
+    df_temp = df_temp.drop_duplicates(subset=["StationId", "Datetime"])
+    df = pd.merge(df, df_temp, on=["StationId", "Datetime"], how="left")
+
+# Drop rows missing future targets so we have clean training labels
+df = df.dropna(subset=["AQI_8h", "AQI_24h", "AQI_168h"])
+print(f"After dropping missing future targets: {df.shape}")
+
 
 df["hour"]    = df["Datetime"].dt.hour
 df["month"]   = df["Datetime"].dt.month
