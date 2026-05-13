@@ -20,6 +20,19 @@ def get_user_location():
     except Exception:
         return {"city": "Delhi", "lat": 28.6139, "lon": 77.2090, "country": "India"}
 
+def geocode_pin_code(pin_code):
+    """Convert a PIN code into lat/lon using Nominatim OpenStreetMap API."""
+    try:
+        url = f"https://nominatim.openstreetmap.org/search?postalcode={pin_code}&format=json"
+        headers = {"User-Agent": "AQI_Intelligence_App/1.0"}
+        resp = requests.get(url, headers=headers, timeout=5)
+        data = resp.json()
+        if len(data) > 0:
+            return float(data[0]["lat"]), float(data[0]["lon"]), data[0]["display_name"]
+    except Exception:
+        pass
+    return None, None, None
+
 
 def fetch_waqi_data(lat, lon):
     """Fetch real-time AQI data from WAQI API using lat/lon."""
@@ -110,15 +123,23 @@ def get_aqi_category(aqi):
     return "Severe", "#7e0023"
 
 
-def fetch_and_prepare(lat=None, lon=None):
+def fetch_and_prepare(lat=None, lon=None, pin_code=None):
     """
     Full pipeline: detect location → fetch WAQI → parse features.
     Returns (features_df, raw_waqi_data, location_info)
     """
+    if pin_code:
+        plat, plon, pname = geocode_pin_code(pin_code)
+        if plat is not None and plon is not None:
+            lat, lon = plat, plon
+            location = {"lat": lat, "lon": lon, "city": pname, "country": ""}
+        else:
+            raise ValueError(f"Could not locate PIN Code: {pin_code}")
+            
     if lat is None or lon is None:
         location = get_user_location()
         lat, lon = location["lat"], location["lon"]
-    else:
+    elif not pin_code:
         location = {"lat": lat, "lon": lon, "city": "Custom", "country": ""}
 
     raw = fetch_waqi_data(lat, lon)
@@ -174,12 +195,12 @@ def fetch_and_prepare(lat=None, lon=None):
     return features_df, raw, location
 
 
-def get_realtime_data():
+def get_realtime_data(pin_code=None):
     """
     Wrapper to match app.py expectations
     """
 
-    features_df, raw, location = fetch_and_prepare()
+    features_df, raw, location = fetch_and_prepare(pin_code=pin_code)
 
     # Convert DataFrame → dict (VERY IMPORTANT)
     features_dict = features_df.iloc[0].to_dict()
