@@ -25,7 +25,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<p class="main-header">Air Quality Intelligence Architecture</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">Air Quality Intelligence Architecture</h1>', unsafe_allow_html=True)
 
 st.markdown("""
 Welcome! This project demonstrates an end-to-end Machine Learning lifecycle applied to environmental forecasting.
