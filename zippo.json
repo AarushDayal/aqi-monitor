@@ -1,0 +1,140 @@
+{
+  "country": "India",
+  "country abbreviation": "IN",
+  "post code": "110001",
+  "places": [
+    {
+      "place name": "Janpath",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Rail Bhawan",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Connaught Place",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Sansadiya Soudha",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Sectt North",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Constitution House",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Eastern Court",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Supreme Court",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Parliament House",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Parliament Street H O",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Laxminarain Mandir",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "New Delhi G P O",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Krishi Bhawan",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Lady Harding Medical College",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Election Commission",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "North Avenue",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Pragati Maidan",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Patiala House",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    },
+    {
+      "place name": "Shastri Bhawan",
+      "longitude": "77.2167",
+      "latitude": "28.6333",
+      "state": "New Delhi",
+      "state abbreviation": "DL"
+    }
+  ]
+}

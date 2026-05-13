@@ -7,18 +7,9 @@ WAQI_TOKEN = "2c2bc76956b55ae1bc800b88b6db0f131a031dca"
 
 
 def get_user_location():
-    """Auto-detect user's city using IP geolocation."""
-    try:
-        resp = requests.get("https://ipapi.co/json/", timeout=5)
-        data = resp.json()
-        return {
-            "city": data.get("city", "Delhi"),
-            "lat": data.get("latitude", 28.6139),
-            "lon": data.get("longitude", 77.2090),
-            "country": data.get("country_name", "India"),
-        }
-    except Exception:
-        return {"city": "Delhi", "lat": 28.6139, "lon": 77.2090, "country": "India"}
+    """Default location when no PIN code is provided."""
+    # We avoid IP geolocation on Streamlit Cloud since it returns the server's IP (e.g. Oregon).
+    return {"city": "New Delhi", "lat": 28.6139, "lon": 77.2090, "country": "India"}
 
 def geocode_pin_code(pin_code):
     """Convert an Indian PIN code into lat/lon using Zippopotam API."""

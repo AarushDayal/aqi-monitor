@@ -222,7 +222,7 @@ def main():
         st.markdown("<h1>Control Panel</h1>", unsafe_allow_html=True)
         st.markdown("Refresh real-time environmental APIs and trigger ML inference.")
         
-        pin_input = st.text_input("Custom PIN Code (Optional)", placeholder="e.g. 110001", help="Leave blank to auto-detect your location via IP.")
+        pin_input = st.text_input("Custom PIN Code (Optional)", placeholder="e.g. 110001", help="Leave blank for default location (New Delhi, India)")
         
         refresh = st.button("Fetch Live Data", type="primary", use_container_width=True)
         st.divider()
