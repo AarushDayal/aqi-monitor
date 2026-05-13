@@ -21,14 +21,16 @@ def get_user_location():
         return {"city": "Delhi", "lat": 28.6139, "lon": 77.2090, "country": "India"}
 
 def geocode_pin_code(pin_code):
-    """Convert a PIN code into lat/lon using Nominatim OpenStreetMap API."""
+    """Convert an Indian PIN code into lat/lon using Zippopotam API."""
     try:
-        url = f"https://nominatim.openstreetmap.org/search?postalcode={pin_code}&countrycodes=in&format=json"
-        headers = {"User-Agent": "AQI_Intelligence_App/1.0"}
-        resp = requests.get(url, headers=headers, timeout=5)
-        data = resp.json()
-        if len(data) > 0:
-            return float(data[0]["lat"]), float(data[0]["lon"]), data[0]["display_name"]
+        url = f"https://api.zippopotam.us/in/{pin_code}"
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            places = data.get("places", [])
+            if places:
+                place = places[0]
+                return float(place["latitude"]), float(place["longitude"]), place["place name"]
     except Exception:
         pass
     return None, None, None
