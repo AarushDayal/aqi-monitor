@@ -23,7 +23,7 @@ def get_user_location():
 def geocode_pin_code(pin_code):
     """Convert a PIN code into lat/lon using Nominatim OpenStreetMap API."""
     try:
-        url = f"https://nominatim.openstreetmap.org/search?postalcode={pin_code}&format=json"
+        url = f"https://nominatim.openstreetmap.org/search?postalcode={pin_code}&countrycodes=in&format=json"
         headers = {"User-Agent": "AQI_Intelligence_App/1.0"}
         resp = requests.get(url, headers=headers, timeout=5)
         data = resp.json()

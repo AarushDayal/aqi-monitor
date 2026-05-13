@@ -5,9 +5,6 @@ __pycache__/
 # Data
 Data/
 
-# Models
-models/
-
 # Env
 .env
 venv/
