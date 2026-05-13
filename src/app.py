@@ -140,8 +140,28 @@ st.markdown("""
 
 @st.cache_resource
 def load_models():
-    stacking_path = os.path.join(BASE_DIR, "models", "saved", "stacking_ensemble.pkl")
-    multi_path = os.path.join(BASE_DIR, "models", "saved", "multi_horizon_model.pkl")
+    import urllib.request
+    
+    models_dir = os.path.join(BASE_DIR, "models", "saved")
+    os.makedirs(models_dir, exist_ok=True)
+    
+    stacking_path = os.path.join(models_dir, "stacking_ensemble.pkl")
+    multi_path = os.path.join(models_dir, "multi_horizon_model.pkl")
+    
+    # Download models if they don't exist
+    base_url = "https://raw.githubusercontent.com/AarushDayal/aqi-monitor/main/models/saved/"
+    
+    if not os.path.exists(stacking_path):
+        try:
+            urllib.request.urlretrieve(base_url + "stacking_ensemble.pkl", stacking_path)
+        except Exception as e:
+            st.error(f"Failed to download stacking_ensemble.pkl: {e}")
+            
+    if not os.path.exists(multi_path):
+        try:
+            urllib.request.urlretrieve(base_url + "multi_horizon_model.pkl", multi_path)
+        except Exception as e:
+            st.warning(f"Failed to download multi_horizon_model.pkl: {e}")
     
     try:
         model = joblib.load(stacking_path)
