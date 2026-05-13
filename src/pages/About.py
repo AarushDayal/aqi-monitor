@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="About the Project",
-    page_icon="🎓",
+    page_icon=None,
     layout="centered"
 )
 
@@ -51,5 +51,5 @@ Welcome! This project demonstrates an end-to-end Machine Learning lifecycle appl
 *This project was built to showcase rigorous data engineering, predictive modeling, and polished product deployment.*
 """)
 
-if st.button("← Back to Main Dashboard"):
+if st.button("Back to Main Dashboard"):
     st.switch_page("app.py")

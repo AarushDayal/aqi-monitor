@@ -21,7 +21,7 @@ except ImportError:
 # Configure the Streamlit page
 st.set_page_config(
     page_title="Air Quality Intelligence",
-    page_icon="🌍",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -168,20 +168,20 @@ def predict_current_aqi(features_dict, base_model):
 
 def get_aqi_category_and_color(aqi):
     if aqi <= 50:
-        return "Good", "good", "🍃"
+        return "Good", "good"
     elif aqi <= 100:
-        return "Moderate", "moderate", "😐"
+        return "Moderate", "moderate"
     elif aqi <= 200:
-        return "Unhealthy", "unhealthy", "😷"
+        return "Unhealthy", "unhealthy"
     elif aqi <= 300:
-        return "Very Unhealthy", "very-unhealthy", "🤢"
+        return "Very Unhealthy", "very-unhealthy"
     else:
-        return "Hazardous", "hazardous", "☠️"
+        return "Hazardous", "hazardous"
 
-def render_metric_card(label, value, icon, color_class=""):
+def render_metric_card(label, value, color_class=""):
     st.markdown(f"""
     <div class="metric-card">
-        <div class="metric-label">{icon} {label}</div>
+        <div class="metric-label">{label}</div>
         <div class="metric-value {color_class}">{value}</div>
     </div>
     """, unsafe_allow_html=True)
@@ -199,13 +199,12 @@ def main():
     refresh = False
     pin_input = ""
     with st.sidebar:
-        st.markdown("<h1>🌍</h1>", unsafe_allow_html=True)
-        st.markdown("## Control Panel")
+        st.markdown("<h1>Control Panel</h1>", unsafe_allow_html=True)
         st.markdown("Refresh real-time environmental APIs and trigger ML inference.")
         
         pin_input = st.text_input("Custom PIN Code (Optional)", placeholder="e.g. 110001", help="Leave blank to auto-detect your location via IP.")
         
-        refresh = st.button("Fetch Live Data ⚡", type="primary", use_container_width=True)
+        refresh = st.button("Fetch Live Data", type="primary", use_container_width=True)
         st.divider()
         
     if refresh or "data" not in st.session_state:
@@ -226,17 +225,17 @@ def main():
     # --- Sidebar Location Info ---
     with st.sidebar:
         loc = data["location"]
-        st.success(f"📍 **Location:**\n{loc}")
+        st.success(f"**Location:**\n{loc}")
         st.caption(f"Last sync: {st.session_state['last_updated']}")
         st.divider()
         
         st.markdown("### About the Project")
         st.info("Learn more about the architecture and pipeline.")
-        if st.button("Project Details →", use_container_width=True):
+        if st.button("Project Details", use_container_width=True):
             st.switch_page("pages/About.py")
 
     # --- Main Header ---
-    st.markdown('<p class="main-header">Air Quality Intelligence</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Air Quality Forecasting</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-header">Advanced multi-horizon predictive modeling and real-time inference</p>', unsafe_allow_html=True)
 
     # --- ML Inference ---
@@ -255,13 +254,13 @@ def main():
         future_preds = [base_aqi] * 3
 
     aqi_8h, aqi_24h, aqi_7d = future_preds
-    category, color_class, emoji = get_aqi_category_and_color(base_aqi)
+    category, color_class = get_aqi_category_and_color(base_aqi)
 
     # --- Status Banner ---
     st.markdown(f"""
         <div class="status-banner">
             <h2 style="margin: 0; font-weight: 300;">Current Environment Status: 
-                <span class="{color_class}" style="font-weight: 800;">{category} {emoji}</span>
+                <span class="{color_class}" style="font-weight: 800;">{category}</span>
             </h2>
         </div>
     """, unsafe_allow_html=True)
@@ -269,13 +268,13 @@ def main():
     # --- Forecast Cards ---
     fc_col1, fc_col2, fc_col3, fc_col4 = st.columns(4)
     with fc_col1:
-        render_metric_card("Live Index", round(base_aqi, 1), "⏱️", color_class)
+        render_metric_card("Live Index", round(base_aqi, 1), color_class)
     with fc_col2:
-        render_metric_card("8H Forecast", round(aqi_8h, 1), "🔮")
+        render_metric_card("8H Forecast", round(aqi_8h, 1),)
     with fc_col3:
-        render_metric_card("24H Forecast", round(aqi_24h, 1), "📅")
+        render_metric_card("24H Forecast", round(aqi_24h, 1),)
     with fc_col4:
-        render_metric_card("7D Forecast", round(aqi_7d, 1), "📆")
+        render_metric_card("7D Forecast", round(aqi_7d, 1),)
 
     st.divider()
 
@@ -283,7 +282,7 @@ def main():
     bot_col1, bot_col2 = st.columns([1, 2])
     
     with bot_col1:
-        st.markdown("### 🧪 Pollutant Levels")
+        st.markdown("### Pollutant Levels")
         st.caption("Micrograms per cubic meter (μg/m³)")
         
         p1, p2 = st.columns(2)
@@ -297,7 +296,7 @@ def main():
         render_pollutant("Carbon Monoxide (CO)", pollutants.get("co", "--"))
 
     with bot_col2:
-        st.markdown("### 📈 Predictive Trend Analysis")
+        st.markdown("### Predictive Trend Analysis")
         
         fig = go.Figure()
         
