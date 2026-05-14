@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import time
 import os
-
+from datetime import datetime, timezone, timedelta 
 from fetch_realtime_data import get_realtime_data
 from forecasting_model import forecast_aqi
 
@@ -246,7 +246,7 @@ def main():
     with st.sidebar:
         loc = data["location"]
         st.success(f"**Location:**\n{loc}")
-        st.caption(f"Last sync: {st.session_state['last_updated']}")
+        st.caption(f"Last Sync: {datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime('%d %b %I:%M %p')} IST")
         st.divider()
         
         st.markdown("### About the Project")
