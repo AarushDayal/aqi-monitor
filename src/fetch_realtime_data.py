@@ -12,17 +12,30 @@ def get_user_location():
     return {"city": "New Delhi", "lat": 28.6139, "lon": 77.2090, "country": "India"}
 
 def geocode_pin_code(pin_code):
-    """Convert an Indian PIN code into lat/lon using Zippopotam API."""
+    """Convert an Indian PIN code into lat/lon using Nominatim OpenStreetMap API."""
     try:
-        url = f"https://api.zippopotam.us/in/{pin_code}"
-        resp = requests.get(url, timeout=5)
+        headers = {"User-Agent": "AQI-Forecasting-App/1.0"}
+        url = f"https://nominatim.openstreetmap.org/search?postalcode={pin_code}&country=india&format=json"
+        resp = requests.get(url, headers=headers, timeout=5)
         if resp.status_code == 200:
             data = resp.json()
-            places = data.get("places", [])
-            if places:
-                place = places[0]
-                return float(place["latitude"]), float(place["longitude"]), place["place name"]
-    except Exception:
+            if data and len(data) > 0:
+                place = data[0]
+                
+                display_name = place.get("display_name", "")
+                parts = [p.strip() for p in display_name.split(',')]
+                
+                # Try to extract the city/area from display_name
+                if len(parts) > 1 and parts[0] == str(pin_code):
+                    place_name = parts[1]
+                elif len(parts) > 0:
+                    place_name = parts[0]
+                else:
+                    place_name = "Custom Location"
+                    
+                return float(place["lat"]), float(place["lon"]), place_name
+    except Exception as e:
+        print(f"Geocoding error: {e}")
         pass
     return None, None, None
 
