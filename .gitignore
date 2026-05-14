@@ -1,10 +1,37 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
 
-# Data
-Data/
-
-# Env
+# Environment
 .env
-venv/
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / generated data
+src/data/aqi_log.csv
+
+# Training artifacts
+Data/
+*.pkl
+*.joblib
+
+# Experimental scripts
+test_*.py
+compress_models.py
+
+# Analysis outputs
+correlation_values.csv
+correlation_heatmap.png
+model_results.csv
+feature_results.csv
+
+# Misc
+zippo.json
